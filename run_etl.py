@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
     jobs = [
         ("90210", "RESIDENTIAL (NEC)"),
-        ("90210", "COMMERCIAL (NEC)"),
+        #("90210", "COMMERCIAL (NEC)"),
         # ("90210", "CONDOMINIUM"),
         # ("90210", "APARTMENT"),
         # ("90210", "DUPLEX/TRIPLEX"),

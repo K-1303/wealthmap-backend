@@ -32,11 +32,11 @@ class Owner(Base):
     full_name = Column(String, nullable=False)
     mailing_address = Column(String, nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.now())
-    type = Column(String, default="individual")  # "individual" or "entity"
-    estimated_net_worth = Column(Float, nullable=True)  # Estimated net worth in USD
-    confidence_level = Column(String, nullable=True)  # "low" | "medium" | "high"
-    wealth_composition = Column(JSONB, nullable=True)  # { realEstate, stocks, cash, other }
-    last_updated = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
+    # type = Column(String, default="individual")  # "individual" or "entity"
+    # estimated_net_worth = Column(Float, nullable=True)  # Estimated net worth in USD
+    # confidence_level = Column(String, nullable=True)  # "low" | "medium" | "high"
+    # wealth_composition = Column(JSONB, nullable=True)  # { realEstate, stocks, cash, other }
+    # last_updated = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
 
 
     __table_args__ = (

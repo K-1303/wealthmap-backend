@@ -49,5 +49,25 @@ def get_owner(owner_id):
     finally:
         session.close()
 
+@app.route("/properties", methods=["GET"])
+def get_properties():
+    session = Session()
+    try:
+        # Query all properties from the database
+        properties = session.query(Property).all()
+        # Return the data as JSON
+        return jsonify([
+            {
+                "id": prop.id,
+                "coordinates": {
+                    "lat": prop.latitude,
+                    "lng": prop.longitude,
+                }
+            }
+            for prop in properties
+        ])
+    finally:
+        session.close()
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
