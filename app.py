@@ -66,15 +66,29 @@ def get_properties():
         return jsonify([
             {
                 "id": prop.id,
+                "address": prop.site_address,
+                "city": prop.city,
+                "state": prop.state,
+                "zip_code": prop.zip_code,
+                "value": prop.avm_value,
+                "size": 2400,
+                "images": ["https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg"],
                 "coordinates": {
                     "lat": prop.latitude,
                     "lng": prop.longitude,
+                },
+                "owner": {
+                    "id": "92yrhdshfsab",
+                    "name": "Ramesh Kumar",
+                    "estimatedNetWorth": 54488451,
                 }
             }
             for prop in properties
         ])
     finally:
         session.close()
+
+#@app.route("/properties/<property_id>", methods=["GET"])
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
