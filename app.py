@@ -1,8 +1,15 @@
 from flask import Flask, jsonify, request
 from db import Session, Owner, Property, OwnerProperty
 from serialization import serialize_owner
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+
+app = Flask(__name__)
+CORS(app, resources={r"/properties": {"origins": "http://localhost:5173"}})
+
+
 
 @app.route("/owners", methods=["GET"])
 def get_owners():
