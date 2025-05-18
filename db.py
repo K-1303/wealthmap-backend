@@ -34,6 +34,8 @@ class Owner(Base):
     created_at = Column(TIMESTAMP, server_default=func.now())
     type = Column(String, default="individual")  
     last_updated = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
+    estimated_net_worth = Column(Float, nullable=True)
+    confidence_level = Column(String, nullable=True)  # high, medium, low
 
 
     __table_args__ = (
@@ -46,13 +48,16 @@ class Property(Base):
     id = Column(String, primary_key=True)
     attom_id = Column(BigInteger, unique=True, nullable=False)
 
-    # Address fields
+    # Basic fields
     site_address = Column(String)        # oneLine
     address_line1 = Column(String)       # line1
     address_line2 = Column(String)       # line2
     city = Column(String)
     state = Column(String)
     zip_code = Column(String)
+    propertytype = Column(String)        # Property type (e.g., Residential, Commercial)
+    year_built = Column(Integer)
+    size = Column(Float)                # Living size or building size
 
     # Coordinates (optional, for mapping or future spatial indexing)
     latitude = Column(Float)

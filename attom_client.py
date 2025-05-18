@@ -75,10 +75,14 @@ def get_property_financial_details(attom_id: int) -> Optional[Dict]:
     assessed = assessment.get("assessed", {})
     market = assessment.get("market", {})
     tax = assessment.get("tax", {})
+    building = prop.get("building", {})
+    size_info = building.get("size", {})
+    summary = prop.get("summary", {})
 
     return {
         "attom_id": prop["identifier"]["attomId"],
-        # Address
+
+        # Basic Details
         "site_address": addr.get("oneLine"),
         "address_line1": addr.get("line1"),
         "address_line2": addr.get("line2"),
@@ -87,6 +91,8 @@ def get_property_financial_details(attom_id: int) -> Optional[Dict]:
         "zip_code": addr.get("postal1"),
         "latitude": float(prop.get("location", {}).get("latitude", 0)),
         "longitude": float(prop.get("location", {}).get("longitude", 0)),
+        "size": size_info.get("livingsize") or size_info.get("bldgsize"),
+        "year_built": summary.get("yearbuilt"),
 
         # Sale
         "sale_amount": sale.get("saleamt"),
@@ -104,5 +110,6 @@ def get_property_financial_details(attom_id: int) -> Optional[Dict]:
         "assessed_total_value": assessed.get("assdttlvalue"),
         "market_total_value": market.get("mktttlvalue"),
         "tax_amount": tax.get("taxamt"),
-        "tax_year": tax.get("taxyear")
+        "tax_year": tax.get("taxyear"),
     }
+

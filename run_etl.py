@@ -7,9 +7,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def process_zip_and_type(zipcode: str, propertytype: str, delay: float = 1.5, limit: int = 50):
-    print(f"Fetching {limit} properties in {zipcode} [{propertytype}]...")
+def process_zip_and_type(zipcode: str, propertytype: str, delay: float = 1.5, limit: int = 100):
     properties = get_properties(zipcode, propertytype)
+
+    print(f"Fetching {len(properties)} properties in {zipcode} [{propertytype}]...")
+
     if not properties:
         print("No properties found.")
         return
@@ -18,13 +20,13 @@ def process_zip_and_type(zipcode: str, propertytype: str, delay: float = 1.5, li
         attom_id = prop.get("identifier", {}).get("attomId")
         if not attom_id:
             continue
-        print(f"[{i+1}/{limit}] Processing Attom ID: {attom_id}")
-        process_attom_id(attom_id)
+        print(f"{i+1} Processing Attom ID: {attom_id}")
+        process_attom_id(attom_id, propertytype)
         time.sleep(delay)
 
 if __name__ == "__main__":
     # Uncomment on first run
-    create_tables()
+    #create_tables()
 
     jobs = [
         ("90210", "RESIDENTIAL (NEC)"),

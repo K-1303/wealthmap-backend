@@ -9,53 +9,6 @@ app = Flask(__name__)
 app = Flask(__name__)
 CORS(app, resources={r"/properties": {"origins": "http://localhost:5173"}})
 
-
-
-@app.route("/owners", methods=["GET"])
-def get_owners():
-    session = Session()
-    try:
-        name = request.args.get("name")
-        state = request.args.get("state")
-        min_net_worth = request.args.get("min_net_worth", type=float)
-
-        query = session.query(Owner)
-
-        if name:
-            query = query.filter(Owner.full_name.ilike(f"%{name}%"))
-        if state:
-            query = query.filter(Owner.mailing_address.ilike(f"%{state}%"))
-        if min_net_worth:
-            query = query.filter(Owner.estimated_net_worth >= min_net_worth)
-
-        owners = query.all()
-
-        response = []
-        for owner in owners:
-            # Join on properties
-            property_ids = session.query(OwnerProperty.property_id).filter_by(owner_id=owner.id)
-            props = session.query(Property).filter(Property.id.in_(property_ids)).all()
-            response.append(serialize_owner(owner, props))
-
-        return jsonify(response)
-    finally:
-        session.close()
-
-@app.route("/owners/<owner_id>")
-def get_owner(owner_id):
-    session = Session()
-    try:
-        owner = session.query(Owner).get(owner_id)
-        if not owner:
-            return jsonify({"error": "Not found"}), 404
-
-        property_ids = session.query(OwnerProperty.property_id).filter_by(owner_id=owner.id)
-        props = session.query(Property).filter(Property.id.in_(property_ids)).all()
-
-        return jsonify(serialize_owner(owner, props))
-    finally:
-        session.close()
-
 @app.route("/properties", methods=["GET"])
 def get_properties():
     session = Session()
@@ -71,17 +24,23 @@ def get_properties():
                 "state": prop.state,
                 "zip_code": prop.zip_code,
                 "value": prop.avm_value,
-                "size": 2400,
+                "size": prop.size,
                 "images": ["https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg"],
                 "coordinates": {
                     "lat": prop.latitude,
                     "lng": prop.longitude,
                 },
-                "owner": {
-                    "id": "92yrhdshfsab",
-                    "name": "Ramesh Kumar",
-                    "estimatedNetWorth": 54488451,
-                }
+                                "owners": [
+                    {
+                        "id": owner.id,
+                        "name": owner.full_name,
+                        "estimatedNetWorth": owner.estimated_net_worth,
+                        "confidenceLevel": owner.confidence_level,
+                    }
+                    for owner in session.query(Owner)
+                    .join(OwnerProperty, Owner.id == OwnerProperty.owner_id)
+                    .filter(OwnerProperty.property_id == prop.id)
+                ]
             }
             for prop in properties
         ])
