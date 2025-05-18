@@ -23,7 +23,7 @@ def estimate_property_value(p: Property):
         p.assessed_total_value or 0
     )
 
-def compute_owner_wealth(owner_id: str):
+def compute_owner_wealth(owner_id: str, owner_length: int = 1) -> dict:
     session = Session()
     try:
         owner = session.query(Owner).get(owner_id)
@@ -54,7 +54,7 @@ def compute_owner_wealth(owner_id: str):
         )
 
         # Update DB
-        owner.estimated_net_worth = estimated_net_worth
+        owner.estimated_net_worth = float(estimated_net_worth)/owner_length
         owner.confidence_level = confidence
         owner.last_updated = datetime.utcnow()
         session.commit()

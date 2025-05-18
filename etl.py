@@ -121,9 +121,11 @@ def process_attom_id(attom_id: int, propertytype) -> List[str]:
 
         session.close()  # Close this session early to avoid locking issues
 
+        owners_len = len(updated_owners)
+
         # Compute wealth
         for oid in updated_owners:
-            result = compute_owner_wealth(oid)
+            result = compute_owner_wealth(oid, owners_len)
 
         return list(updated_owners)
 
