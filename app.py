@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 
 app = Flask(__name__)
-CORS(app, resources={r"/properties": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/properties": {"origins": ["http://localhost:5173", "https://wealth-map-1.onrender.com"]}})
 
 @app.route("/properties", methods=["GET"])
 def get_properties():
