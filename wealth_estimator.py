@@ -1,6 +1,6 @@
 from typing import List
 from db import Property, Owner, OwnerProperty, Session
-from sqlalchemy.orm import joinedload
+from datetime import datetime
 from rules import (
     MinPropertiesRule, HighAverageAVMRule,
     HasCommercialPropertyRule, MultiStateOwnershipRule,
@@ -56,6 +56,7 @@ def compute_owner_wealth(owner_id: str):
         # Update DB
         owner.estimated_net_worth = estimated_net_worth
         owner.confidence_level = confidence
+        owner.last_updated = datetime.utcnow()
         session.commit()
 
         return {

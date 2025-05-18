@@ -98,6 +98,7 @@ def get_property_financial_details(attom_id: int) -> Optional[Dict]:
         "sale_amount": sale.get("saleamt"),
         "sale_date": prop.get("sale", {}).get("saleTransDate"),
         "sale_type": prop.get("sale", {}).get("saletranstype"),
+        "sale_date": prop.get("sale", {}).get("saleTransDate"),
 
         # AVM
         "avm_value": avm.get("value"),

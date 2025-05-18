@@ -67,6 +67,7 @@ class Property(Base):
     sale_amount = Column(Float)
     sale_date = Column(String)
     sale_type = Column(String)
+    sale_date = Column(String)  # Date of the last sale
 
     # Valuation
     avm_value = Column(Float)

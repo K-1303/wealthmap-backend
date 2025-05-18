@@ -2,10 +2,6 @@ from attom_client import get_properties
 from etl import process_attom_id
 from db import create_tables
 import time
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 def process_zip_and_type(zipcode: str, propertytype: str, delay: float = 1.5, limit: int = 100):
     properties = get_properties(zipcode, propertytype)
@@ -26,7 +22,7 @@ def process_zip_and_type(zipcode: str, propertytype: str, delay: float = 1.5, li
 
 if __name__ == "__main__":
     # Uncomment on first run
-    #create_tables()
+    create_tables()
 
     jobs = [
         ("90210", "RESIDENTIAL (NEC)"),

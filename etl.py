@@ -2,12 +2,9 @@ import uuid
 from datetime import datetime
 from db import Session, Owner, Property, OwnerProperty
 from attom_client import get_owner_details, get_property_financial_details
-import os
 from dotenv import load_dotenv
 from wealth_estimator import compute_owner_wealth
 from typing import List
-
-load_dotenv()
 
 def normalize_name(name: str) -> str:
     return name.strip().upper() if name else None
@@ -61,6 +58,7 @@ def insert_or_update_property(session, data: dict, propertytype) -> str:
     property_obj.sale_amount = data.get("sale_amount")
     property_obj.sale_date = data.get("sale_date")
     property_obj.sale_type = data.get("sale_type")
+    property_obj.sale_date = data.get("sale_date")
 
     # AVM
     property_obj.avm_value = data.get("avm_value")
@@ -95,12 +93,12 @@ def process_attom_id(attom_id: int, propertytype) -> List[str]:
     try:
         owner_data = get_owner_details(attom_id)
         if not owner_data:
-            print(f"⚠️ Skipping attom_id={attom_id}: no owner data")
+            print(f"Skipping attom_id={attom_id}: no owner data")
             return []
 
         financial_data = get_property_financial_details(attom_id)
         if not financial_data:
-            print(f"⚠️ Skipping attom_id={attom_id}: no financial data")
+            print(f"Skipping attom_id={attom_id}: no financial data")
             return []
 
         property_id = insert_or_update_property(session, financial_data, propertytype)
@@ -109,7 +107,7 @@ def process_attom_id(attom_id: int, propertytype) -> List[str]:
         mailing_address = normalize_address(owner_block.get("mailingaddressoneline"))
 
         if not mailing_address:
-            print(f"⚠️ Skipping attom_id={attom_id}: missing mailing address")
+            print(f"Skipping attom_id={attom_id}: missing mailing address")
             return []
 
         # Loop through all keys that start with "owner" and have a fullname
@@ -123,7 +121,7 @@ def process_attom_id(attom_id: int, propertytype) -> List[str]:
 
         session.close()  # Close this session early to avoid locking issues
 
-        # 🔁 Compute wealth
+        # Compute wealth
         for oid in updated_owners:
             result = compute_owner_wealth(oid)
 

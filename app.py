@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, request
 from db import Session, Owner, Property, OwnerProperty
-from serialization import serialize_owner
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -47,7 +46,72 @@ def get_properties():
     finally:
         session.close()
 
-#@app.route("/properties/<property_id>", methods=["GET"])
+@app.route("/properties/<property_id>", methods=["GET"])
+def get_property_by_id(property_id):
+    session = Session()
+    try:
+        # Query the property by ID
+        property = session.query(Property).filter(Property.id == property_id).first()
+        if not property:
+            return jsonify({"error": "Property not found"}), 404
+
+        # Query the owners associated with the property
+        owners = session.query(Owner).join(OwnerProperty, Owner.id == OwnerProperty.owner_id).filter(OwnerProperty.property_id == property_id).all()
+
+        # Serialize the property details
+        property_data = {
+            "id": property.id,
+            "attom_id": property.attom_id,
+            "site_address": property.site_address,
+            "address_line1": property.address_line1,
+            "address_line2": property.address_line2,
+            "city": property.city,
+            "state": property.state,
+            "zip_code": property.zip_code,
+            "propertytype": property.propertytype,
+            "year_built": property.year_built,
+            "size": property.size,
+            "latitude": property.latitude,
+            "longitude": property.longitude,
+            "sale_amount": property.sale_amount,
+            "sale_date": property.sale_date,
+            "sale_type": property.sale_type,
+            "avm_value": property.avm_value,
+            "avm_low": property.avm_low,
+            "avm_high": property.avm_high,
+            "avm_score": property.avm_score,
+            "avm_last_updated": property.avm_last_updated,
+            "assessed_total_value": property.assessed_total_value,
+            "market_total_value": property.market_total_value,
+            "tax_amount": property.tax_amount,
+            "tax_year": property.tax_year,
+            "created_at": property.created_at,
+        }
+
+        # Serialize the owner details
+        owner_data = [
+            {
+                "id": owner.id,
+                "full_name": owner.full_name,
+                "mailing_address": owner.mailing_address,
+                "type": owner.type,
+                "estimated_net_worth": owner.estimated_net_worth,
+                "confidence_level": owner.confidence_level,
+                "created_at": owner.created_at,
+                "last_updated": owner.last_updated,
+            }
+            for owner in owners
+        ]
+
+        # Combine property and owner data
+        response_data = {
+            "property": property_data,
+            "owners": owner_data,
+        }
+
+        return jsonify(response_data)
+    finally:
+        session.close()
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000)
