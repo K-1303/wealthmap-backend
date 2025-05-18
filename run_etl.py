@@ -22,7 +22,7 @@ def process_zip_and_type(zipcode: str, propertytype: str, delay: float = 1.5, li
 
 if __name__ == "__main__":
     # Uncomment on first run
-    create_tables()
+    #create_tables()
 
     jobs = [
         ("90210", "RESIDENTIAL (NEC)"),
