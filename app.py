@@ -22,7 +22,7 @@ def get_properties():
                 "city": prop.city,
                 "state": prop.state,
                 "zip_code": prop.zip_code,
-                "value": prop.avm_value,
+                "value": max(prop.avm_value or 0, prop.market_total_value or 0, prop.sale_amount or 0, prop.assessed_total_value or 0),
                 "size": prop.size,
                 "images": ["https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg"],
                 "coordinates": {

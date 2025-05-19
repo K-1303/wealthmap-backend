@@ -61,7 +61,7 @@ def compute_owner_wealth(owner_id: str, owner_length: int = 1) -> dict:
 
         return {
             "owner_id": owner_id,
-            "estimated_net_worth": estimated_net_worth,
+            "estimated_net_worth": float(estimated_net_worth)/owner_length,
             "confidence_level": confidence,
             "base_value": base_value,
             "multiplier": multiplier,
