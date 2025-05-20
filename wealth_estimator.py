@@ -1,11 +1,8 @@
 from typing import List
 from db import Property, Owner, OwnerProperty, Session
 from datetime import datetime
-from rules import (
-    MinPropertiesRule, HighAverageAVMRule,
-    HasCommercialPropertyRule, MultiStateOwnershipRule,
-    RecentTransactionRule
-)
+from rules import *
+import random
 
 RULES = [
     MinPropertiesRule(),
@@ -13,7 +10,14 @@ RULES = [
     MultiStateOwnershipRule(),
     HasCommercialPropertyRule(),
     RecentTransactionRule(),
+    HighPropertyTaxRule(),
+    LuxuryZipRule(),
+    LargeHomeRule(),
+    OlderLuxuryHomeRule(),
+    HighConfidenceAVMRule(),
+    LuxuryStateRule()
 ]
+
 
 def estimate_property_value(p: Property):
     return max(
@@ -44,7 +48,8 @@ def compute_owner_wealth(owner_id: str, owner_length: int = 1) -> dict:
                 active_rules.append(rule.__class__.__name__)
 
         inferred_real_estate_wealth = base_value * multiplier
-        estimated_net_worth = inferred_real_estate_wealth * 2.0  # Conservative boost for non-RE wealth
+        non_real_estate_wealth_multiplier = random.uniform(1.5, 2.0)
+        estimated_net_worth = inferred_real_estate_wealth * non_real_estate_wealth_multiplier
 
         # Confidence based on rule count
         confidence = (

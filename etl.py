@@ -137,4 +137,22 @@ def process_attom_id(attom_id: int, propertytype) -> List[str]:
         if session:
             session.close()
 
+def run_batch_wealth_estimation():
+    session = Session()
+    try:
+        owners = session.query(Owner).all()
+        print(f"🧮 Found {len(owners)} owners. Estimating wealth...")
+
+        for owner in owners:
+            # Count how many owners share this mailing address
+            mailing_group_size = session.query(Owner).filter_by(mailing_address=owner.mailing_address).count()
+            result = compute_owner_wealth(owner.id, owner_length=mailing_group_size)
+
+        
+        print("Wealth estimation completed.")
+
+    finally:
+        session.close()
+
+
 

@@ -1,6 +1,5 @@
 from attom_client import get_properties
-from etl import process_attom_id
-from db import create_tables
+from etl import process_attom_id, run_batch_wealth_estimation
 import time
 
 def process_zip_and_type(zipcode: str, propertytype: str, delay: float = 1.5, limit: int = 100):
@@ -33,3 +32,6 @@ if __name__ == "__main__":
         process_zip_and_type(zipcode, propertytype, delay=2.0, limit=50)
 
     print("All jobs completed.")
+
+    # Uncomment to run wealth estimation
+    #run_batch_wealth_estimation()

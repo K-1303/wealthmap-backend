@@ -81,7 +81,7 @@ def get_property_by_id(property_id):
             "avm_high": property.avm_high,
             "avm_score": property.avm_score,
             "avm_last_updated": property.avm_last_updated,
-            "assessed_total_value": property.assessed_total_value,
+            "assessed_total_value": max(property.assessed_total_value or 0, property.market_total_value or 0, property.sale_amount or 0, property.avm_value or 0),
             "market_total_value": property.market_total_value,
             "tax_amount": property.tax_amount,
             "tax_year": property.tax_year,
